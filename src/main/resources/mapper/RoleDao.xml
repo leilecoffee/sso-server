@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="cn.mcsj.sso.dao.RoleDao">  
+     
+    <resultMap id="roleResultMap" type="Role">
+		<result property="roleId" column="role_id" />
+		<result property="name" column="name" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<sql id="roleColumns"> 
+			role_id,
+			name,
+			create_time
+	</sql>
+	
+	<sql id="query_Role_where">
+		<where>
+			1 = 1
+			<if test="roleId != null and roleId !=''">and role_id = #{roleId}</if>
+			<if test="name != null and name !=''">and name = #{name}</if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+		</where>
+	</sql>
+	
+	<select id="getOne" parameterType="long" resultMap="roleResultMap">
+		select
+		<include refid="roleColumns" />
+		from t_role
+		where role_id = #{roleId}
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="roleResultMap">
+		select
+		<include refid="roleColumns" />
+		from t_role
+		<include refid="query_Role_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+	
+    <select id="total" parameterType="java.util.Map" resultType="int">
+		select count(1) from t_role
+		<include refid="query_Role_where" />
+	</select>
+    
+    <insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="roleId">  
+        insert into t_role(
+        <include refid="roleColumns" />
+        )  
+		values(
+        #{roleId},
+        #{name},
+        #{createTime}
+		)
+    </insert>  
+      
+    <update id="update" parameterType="Role">
+		update t_role
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+		</set>
+		where role_id = #{roleId}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from t_role where
+		role_id = #{roleId}
+	</delete>
+      
+</mapper>  

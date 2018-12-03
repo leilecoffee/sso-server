@@ -1,0 +1,24 @@
+server: 
+  port: 8000
+spring:
+  profiles:
+    #启动时采用的配置文件
+    active: dev
+  http: 
+    encoding: 
+      charset: UTF-8
+      enable: true
+      force: true
+  mvc: 
+    #出现错误直接抛出异常
+    throw-exception-if-no-handler-found: true
+    #不要为资源文件建立映射
+  resources:
+    add-mappings: false
+  executor:
+    corePoolSize: 20
+    maxPoolSize: 80
+    queueCapacity: 100
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+  typeAliasesPackage: cn.mcsj.sso.entity

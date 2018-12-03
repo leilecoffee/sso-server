@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="cn.mcsj.sso.dao.MenuDao">  
+     
+    <resultMap id="menuResultMap" type="Menu">
+		<result property="menuId" column="menu_id" />
+		<result property="name" column="name" />
+		<result property="parentId" column="parent_id" />
+		<result property="url" column="url" />
+		<result property="sort" column="sort" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<sql id="menuColumns"> 
+			menu_id,
+			name,
+			parent_id,
+			url,
+			sort,
+			create_time
+	</sql>
+	
+	<sql id="query_Menu_where">
+		<where>
+			1 = 1
+			<if test="menuId != null and menuId !=''">and menu_id = #{menuId}</if>
+			<if test="name != null and name !=''">and name = #{name}</if>
+			<if test="parentId != null and parentId !=''">and parent_id = #{parentId}</if>
+			<if test="url != null and url !=''">and url = #{url}</if>
+			<if test="sort != null and sort !=''">and sort = #{sort}</if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+		</where>
+	</sql>
+	
+	<select id="getOne" parameterType="long" resultMap="menuResultMap">
+		select
+		<include refid="menuColumns" />
+		from t_menu
+		where menu_id = #{menuId}
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="menuResultMap">
+		select
+		<include refid="menuColumns" />
+		from t_menu
+		<include refid="query_Menu_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+	
+    <select id="total" parameterType="java.util.Map" resultType="int">
+		select count(1) from t_menu
+		<include refid="query_Menu_where" />
+	</select>
+    
+    <insert id="insert" parameterType="Menu" useGeneratedKeys="true" keyProperty="menuId">  
+        insert into t_menu(
+        <include refid="menuColumns" />
+        )  
+		values(
+        #{menuId},
+        #{name},
+        #{parentId},
+        #{url},
+        #{sort},
+        #{createTime}
+		)
+    </insert>  
+      
+    <update id="update" parameterType="Menu">
+		update t_menu
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId},
+			</if>
+			<if test="url != null">
+				url = #{url},
+			</if>
+			<if test="sort != null">
+				sort = #{sort},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+		</set>
+		where menu_id = #{menuId}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from t_menu where
+		menu_id = #{menuId}
+	</delete>
+      
+</mapper>  
